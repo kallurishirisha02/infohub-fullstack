@@ -8,8 +8,9 @@ export default function QuoteGenerator() {
 
   const getQuote = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get("/api/quote");
+    
+      const res = await axios.get("https://infohub-fullstack-production.up.railway.app/api/quote");
+
       setQuote(res.data);
       setError("");
     } catch {
