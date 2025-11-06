@@ -6,15 +6,15 @@ export default function QuoteGenerator() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const getQuote = async () => {
+  const fetchQuote = async () => {
     try {
-    
-      const res = await axios.get("https://infohub-fullstack-production.up.railway.app/api/quote");
-
-      setQuote(res.data);
+      setLoading(true);
       setError("");
-    } catch {
-      setError("Failed to fetch quote.");
+      const res = await axios.get("https://infohub-fullstack-production.up.railway.app/api/quote");
+      setQuote(res.data);
+    } catch (err) {
+      setError("Failed to fetch quote. Please try again.");
+      console.error("Quote fetch error:", err.message);
     } finally {
       setLoading(false);
     }
@@ -22,14 +22,17 @@ export default function QuoteGenerator() {
 
   return (
     <div className="text-center">
-      <h2>Motivational Quotes</h2>
-      <button className="primary" onClick={getQuote}>Generate Quote</button>
+      <h2>Quote Generator</h2>
+      <button className="primary" onClick={fetchQuote}>
+        Generate Quote
+      </button>
 
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
+
       {quote && (
-        <div>
-          <p className="italic">"{quote.quote}"</p>
+        <div className="italic">
+          “{quote.text}”
           <p>- {quote.author}</p>
         </div>
       )}

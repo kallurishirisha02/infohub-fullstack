@@ -55,7 +55,21 @@ app.get("/api/currency", async (req, res) => {
   }
 });
 
-// --- HEALTH CHECK ROUTE ---
+
+// --- QUOTE ROUTE ---
+app.get("/api/quote", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.quotable.io/random");
+    res.json({
+      success: true,
+      text: response.data.content,
+      author: response.data.author,
+    });
+  } catch (err) {
+    console.error("Quote error:", err.message);
+    res.status(500).json({ error: "Failed to fetch quote" });
+  }
+});
 
 
 
