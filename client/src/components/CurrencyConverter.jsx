@@ -8,7 +8,9 @@ export default function CurrencyConverter() {
 
   const convert = async () => {
     try {
-      const res = await axios.get(`http://localhost:3001/api/currency?amount=${amount || 1}`);
+
+      const res = await axios.get(`https://infohub-fullstack-production.up.railway.app/api/currency?amount=${amount || 1}`);
+
       setResult(res.data.converted);
       setError("");
     } catch {

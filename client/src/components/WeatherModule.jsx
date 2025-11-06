@@ -10,7 +10,9 @@ export default function WeatherModule() {
   const fetchWeather = async (cityName) => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:3001/api/weather?city=${cityName}`);
+
+      const res = await axios.get(`https://infohub-fullstack-production.up.railway.app/api/weather?city=${cityName}`);
+
       setData(res.data.data);
       setError("");
     } catch {
