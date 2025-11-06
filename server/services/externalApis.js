@@ -7,11 +7,28 @@ dotenv.config(); // ✅ ensures .env variables load in this file too
 const WEATHER_KEY = process.env.WEATHER_KEY;
 const CURRENCY_KEY = process.env.CURRENCY_KEY;
 
-// 🔹 Fetch random quote from external API
+// ✅ Fetch random quote (with Railway-compatible fallback)
 export async function fetchQuoteFromExternal() {
-  const url = "https://api.quotable.io/random";
-  const resp = await axios.get(url, { timeout: 5000 });
-  return { quote: resp.data.content, author: resp.data.author };
+  try {
+    // Primary API (ZenQuotes — works even on Railway)
+    const resp = await axios.get("https://zenquotes.io/api/random", { timeout: 7000 });
+
+    if (Array.isArray(resp.data) && resp.data.length > 0) {
+      return { quote: resp.data[0].q, author: resp.data[0].a };
+    }
+
+    // If format unexpected, fallback to Quotable API
+    const fallback = await axios.get("https://api.quotable.io/random", { timeout: 7000 });
+    return { quote: fallback.data.content, author: fallback.data.author };
+  } catch (err) {
+    console.error("Quote fetch failed:", err.message);
+
+    // Graceful fallback: show default message if both APIs fail
+    return {
+      quote: "Stay positive. Better days are on the way!",
+      author: "InfoHub Bot",
+    };
+  }
 }
 
 // 🔹 Fetch weather details for a city
